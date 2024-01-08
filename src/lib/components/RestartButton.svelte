@@ -1,5 +1,11 @@
 <script lang="ts">
-	import type { FieldStore, TurnStore, WinTypeStore, WinnerStore } from '$lib/types/storeTypes';
+	import type {
+		ClearConfettiStore,
+		FieldStore,
+		TurnStore,
+		WinTypeStore,
+		WinnerStore
+	} from '$lib/types/storeTypes';
 	import confetti from 'canvas-confetti';
 	import { getContext } from 'svelte';
 
@@ -7,11 +13,13 @@
 	const winType = getContext<WinTypeStore>('winType');
 	const field = getContext<FieldStore>('field');
 	const winner = getContext<WinnerStore>('winner');
+	const clearConfetti = getContext<ClearConfettiStore>('clearConfetti');
 	const restart = () => {
 		turn.reset();
 		winType.reset();
 		$field = [null, null, null, null, null, null, null, null, null];
 		winner.reset();
+		clearConfetti.clear();
 		confetti.reset();
 	};
 </script>

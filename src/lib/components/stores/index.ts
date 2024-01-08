@@ -1,5 +1,11 @@
 import type { FieldType, PlayerType, WinType } from '$lib/types';
-import type { FieldStore, TurnStore, WinTypeStore, WinnerStore } from '$lib/types/storeTypes';
+import type {
+	ClearConfettiStore,
+	FieldStore,
+	TurnStore,
+	WinTypeStore,
+	WinnerStore
+} from '$lib/types/storeTypes';
 import { derived, writable } from 'svelte/store';
 
 export const createTurnStore = (): TurnStore => {
@@ -44,5 +50,19 @@ export const createWinTypeStore = (): WinTypeStore => {
 		set,
 		update,
 		reset: () => set(null)
+	};
+};
+
+export const createClearConfettiStore = (): ClearConfettiStore => {
+	const { subscribe, set, update } = writable<boolean>(false);
+	const clear = () => {
+		set(true);
+		setTimeout(() => set(false), 100);
+	};
+	return {
+		subscribe,
+		set,
+		clear,
+		update
 	};
 };

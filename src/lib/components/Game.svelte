@@ -8,6 +8,7 @@
 	import RestartButton from './RestartButton.svelte';
 	import Turn from './Turn.svelte';
 	import {
+		createClearConfettiStore,
 		createCrossTurnStore,
 		createFieldStore,
 		createIsTieStore,
@@ -22,14 +23,14 @@
 	let winType = createWinTypeStore();
 	let crossTurn = createCrossTurnStore(turn);
 	let isTie = createIsTieStore(turn, winner);
-	
+	const clearConfetti = createClearConfettiStore();
 	setContext('field', field);
 	setContext('turn', turn);
 	setContext('crossTurn', crossTurn);
 	setContext('winner', winner);
 	setContext('winType', winType);
 	setContext('isTie', isTie);
-
+	setContext('clearConfetti', clearConfetti);
 	const analyze = () => {
 		const check: WinCheck[] = getWinCheckArray();
 		for (const row of check) {
@@ -94,11 +95,13 @@
 		const frame = () => {
 			confetti({ ...defaults, angle: 60, origin: { x: 0, y: 1 } });
 			confetti({ ...defaults, angle: 120, origin: { x: 1, y: 1 } });
-			if (Date.now() < end) {
+			if (Date.now() < end && !$clearConfetti) {
 				requestAnimationFrame(frame);
 			}
 		};
-		requestAnimationFrame(frame);
+		if (!$clearConfetti) {
+			requestAnimationFrame(frame);
+		}
 	};
 </script>
 
