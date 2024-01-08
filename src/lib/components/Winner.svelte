@@ -7,6 +7,7 @@
 	const winner = getContext<WinnerStore>('winner');
 	const isTie = getContext<IsTieStore>('isTie');
 	const resetter = getContext<ResetterStore>('resetter');
+
 	const focus = (node: HTMLButtonElement) => node.focus();
 	const handleKeyDown = (event: KeyboardEvent) => {
 		const { key } = event;
@@ -34,11 +35,11 @@
 			IT'S A TIE!
 		{:else if $winner === 'X'}
 			<div class="flex justify-center items-center gap-5">
-				AND THE WINER IS PLAYER <Cross />
+				AND THE WINNER IS PLAYER <Cross />
 			</div>
 		{:else if $winner === 'O'}
 			<div class="flex justify-center items-center gap-5">
-				AND THE WINER IS PLAYER <Circle />
+				AND THE WINNER IS PLAYER <Circle />
 			</div>
 		{/if}
 	</div>

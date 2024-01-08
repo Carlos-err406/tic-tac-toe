@@ -36,7 +36,15 @@ export interface ResetterStores {
 	field: FieldStore;
 	winType: WinTypeStore;
 	confettiTrigger: ConfettiTrigger;
+	score: ScoreStore;
 }
 export type ResetterStore = Readable<ResetterStores> & {
+	reset: () => void;
+};
+
+export type ScoreStore = Store<{ [key in PlayerType]: number }> & {
+	score: (player: PlayerType) => void;
+	scoreX: () => void;
+	scoreO: () => void;
 	reset: () => void;
 };

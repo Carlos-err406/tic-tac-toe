@@ -3,6 +3,8 @@ import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 import confetti from 'canvas-confetti';
+import { writable } from 'svelte/store';
+import { spring } from 'svelte/motion';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -74,4 +76,69 @@ export const getConfetti = () => {
 		cross: { cross, color: crossColor },
 		circle: { circle, color: circleColor }
 	};
+};
+
+export interface HeightSpringOptions {
+	stiffness: number;
+	damping: number;
+}
+export interface WidthSpringOptions extends HeightSpringOptions {
+	initialw: number;
+}
+export function springHeight(
+	element: HTMLElement,
+	options: HeightSpringOptions = { stiffness: 0.1, damping: 0.4 }
+) {
+	if (!element) return;
+	const internalStore = writable<number | null>(null, (set) => {
+		const obeserver = new ResizeObserver(() => element && set(element.offsetHeight));
+		obeserver.observe(element);
+		return () => obeserver.disconnect();
+	});
+	const springStore = spring(0, options);
+	internalStore.subscribe((value) => {
+		value !== null && springStore.set(value);
+	});
+	return springStore;
+}
+
+export const chunk = <T extends any>(array: T[], size: number = 1) => {
+	const slice = (array: T[], start: number, end?: number) => {
+		let length = array == null ? 0 : array.length;
+		if (!length) {
+			return [];
+		}
+		start = start == null ? 0 : start;
+		end = end === undefined ? length : end;
+
+		if (start < 0) {
+			start = -start > length ? 0 : length + start;
+		}
+		end = end > length ? length : end;
+		if (end < 0) {
+			end += length;
+		}
+		length = start > end ? 0 : (end - start) >>> 0;
+		start >>>= 0;
+
+		let index = -1;
+		const result = new Array(length);
+		while (++index < length) {
+			result[index] = array[index + start];
+		}
+		return result;
+	};
+	size = Math.max(size, 0);
+	const length = array == null ? 0 : array.length;
+	if (!length || size < 1) {
+		return [];
+	}
+	let index = 0;
+	let resIndex = 0;
+	const result = new Array(Math.ceil(length / size));
+
+	while (index < length) {
+		result[resIndex++] = slice(array, index, (index += size));
+	}
+	return result;
 };

@@ -1,58 +1,26 @@
 <script lang="ts">
-	import { WinType, type ThreeCells, type WinCheck, type ConfettiTrigger } from '$lib/types';
-	import { setContext } from 'svelte';
-	import Field from './Field.svelte';
-	import Player from './Player.svelte';
-	import RestartButton from './RestartButton.svelte';
-	import Turn from './Turn.svelte';
-	import {
-		createCrossTurnStore,
-		createFieldStore,
-		createGameOverStore,
-		createIsTieStore,
-		createResetterStore,
-		createTurnStore,
-		createWinTypeStore,
-		createWinnerStore
-	} from '../stores';
-	import { createConfettiTrigger } from '$lib';
+	import { WinType, type ConfettiTrigger, type ThreeCells, type WinCheck } from '$lib/types';
 	import type {
-		CrossTurnStore,
 		FieldStore,
-		GameOverStore,
-		IsTieStore,
-		ResetterStore,
+		ScoreStore,
 		TurnStore,
 		WinTypeStore,
 		WinnerStore
 	} from '$lib/types/storeTypes';
-	import Winner from './Winner.svelte';
+	import { getContext } from 'svelte';
+	import Field from './Field.svelte';
+	import Player from './Player.svelte';
+	import RestartButton from './RestartButton.svelte';
+	import Turn from './Turn.svelte';
 
-	const turn: TurnStore = createTurnStore();
-	let field: FieldStore = createFieldStore();
-	const winner: WinnerStore = createWinnerStore();
-	const winType: WinTypeStore = createWinTypeStore();
-	const crossTurn: CrossTurnStore = createCrossTurnStore(turn);
-	const isTie: IsTieStore = createIsTieStore(turn, winner);
-	const confettiTrigger: ConfettiTrigger = createConfettiTrigger();
-	const gameOver: GameOverStore = createGameOverStore(turn, winner);
-	const resetter: ResetterStore = createResetterStore({
-		turn,
-		winner,
-		field,
-		winType,
-		confettiTrigger
-	});
-	setContext('field', field);
-	setContext('turn', turn);
-	setContext('crossTurn', crossTurn);
-	setContext('winner', winner);
-	setContext('winType', winType);
-	setContext('isTie', isTie);
-	setContext('confettiTrigger', confettiTrigger);
-	setContext('gameOver', gameOver);
-	setContext('resetter', resetter);
-
+	const [winner, winType, score, turn, field, confettiTrigger] = [
+		getContext<WinnerStore>('winner'),
+		getContext<WinTypeStore>('winType'),
+		getContext<ScoreStore>('score'),
+		getContext<TurnStore>('turn'),
+		getContext<FieldStore>('field'),
+		getContext<ConfettiTrigger>('confettiTrigger')
+	];
 	const analyze = () => {
 		const check: WinCheck[] = getWinCheckArray();
 		for (const row of check) {
@@ -60,6 +28,7 @@
 			$winner = checkRow(cells);
 			if ($winner) {
 				$winType = win;
+				score.score($winner);
 				triggerWinAnimation();
 				return;
 			}
@@ -106,7 +75,3 @@
 	</div>
 	<Field on:played={() => $turn > 5 && !$winner && analyze()} />
 </div>
-
-{#if $gameOver}
-	<Winner />
-{/if}

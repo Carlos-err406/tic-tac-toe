@@ -4,6 +4,7 @@ import type {
 	GameOverStore,
 	ResetterStore,
 	ResetterStores,
+	ScoreStore,
 	TurnStore,
 	WinTypeStore,
 	WinnerStore
@@ -66,18 +67,56 @@ export const createResetterStore = ({
 	winner,
 	field,
 	winType,
-	confettiTrigger
+	confettiTrigger,
+	score
 }: ResetterStores): ResetterStore => {
-	const { subscribe } = readable({ turn, winner, field, winType, confettiTrigger });
+	const { subscribe } = readable({ turn, winner, field, winType, confettiTrigger, score });
 	const reset = () => {
 		turn.reset();
 		winner.reset();
 		winType.reset();
 		field.set([null, null, null, null, null, null, null, null, null]);
+		// score.reset();
 		confettiTrigger.clear();
 	};
 	return {
 		subscribe,
+		reset
+	};
+};
+
+export const createScoreStore = (): ScoreStore => {
+	const { subscribe, set, update } = writable({ X: 0, O: 0 });
+	const scoreX = () => {
+		update((state) => {
+			state.X = state.X + 1;
+			return state;
+		});
+	};
+	const scoreO = () => {
+		update((state) => {
+			state.O = state.O + 1;
+			return state;
+		});
+	};
+	const score = (player: PlayerType) => {
+		if (player === 'X') scoreX();
+		else if (player === 'O') scoreO();
+	};
+
+	const reset = () => {
+		set({
+			O: 0,
+			X: 0
+		});
+	};
+	return {
+		subscribe,
+		update,
+		set,
+		score,
+		scoreX,
+		scoreO,
 		reset
 	};
 };
