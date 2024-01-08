@@ -15,13 +15,14 @@
 		createWinTypeStore,
 		createWinnerStore
 	} from './stores';
-	
+
 	let turn = createTurnStore();
 	let field = createFieldStore();
 	let winner = createWinnerStore();
 	let winType = createWinTypeStore();
 	let crossTurn = createCrossTurnStore(turn);
 	let isTie = createIsTieStore(turn, winner);
+	
 	setContext('field', field);
 	setContext('turn', turn);
 	setContext('crossTurn', crossTurn);
