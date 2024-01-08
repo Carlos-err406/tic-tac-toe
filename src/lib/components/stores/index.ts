@@ -1,6 +1,5 @@
 import type { FieldType, PlayerType, WinType } from '$lib/types';
 import type {
-	ClearConfettiStore,
 	FieldStore,
 	TurnStore,
 	WinTypeStore,
@@ -50,19 +49,5 @@ export const createWinTypeStore = (): WinTypeStore => {
 		set,
 		update,
 		reset: () => set(null)
-	};
-};
-
-export const createClearConfettiStore = (): ClearConfettiStore => {
-	const { subscribe, set, update } = writable<boolean>(false);
-	const clear = () => {
-		set(true);
-		setTimeout(() => set(false), 100);
-	};
-	return {
-		subscribe,
-		set,
-		clear,
-		update
 	};
 };

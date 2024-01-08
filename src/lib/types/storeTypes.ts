@@ -28,7 +28,3 @@ export type WinnerStore = Store<PlayerType | null> & {
 export type WinTypeStore = Store<WinType | null> & {
 	reset: () => void;
 };
-
-export type ClearConfettiStore = Store<boolean> & {
-	clear: () => void;
-};

@@ -1,22 +1,25 @@
 <script lang="ts">
 	import { WinType } from '$lib/types';
-	import {
-		type FieldStore,
-		type CrossTurnStore,
-		type TurnStore,
-		type WinTypeStore,
-		type WinnerStore
+	import type {
+		CrossTurnStore,
+		FieldStore,
+		IsTieStore,
+		TurnStore,
+		WinTypeStore,
+		WinnerStore
 	} from '$lib/types/storeTypes';
 	import { createEventDispatcher, getContext } from 'svelte';
 	import { scale } from 'svelte/transition';
 	import Circle from './Circle.svelte';
 	import Cross from './Cross.svelte';
+
 	export let index: number;
 	let cell: HTMLButtonElement;
 	const turn = getContext<TurnStore>('turn');
 	const winType = getContext<WinTypeStore>('winType');
 	const field = getContext<FieldStore>('field');
 	const winner = getContext<WinnerStore>('winner');
+	const isTie = getContext<IsTieStore>('isTie');
 	const crossTurn = getContext<CrossTurnStore>('crossTurn');
 	const dispatch = createEventDispatcher();
 	const handleClick = () => {
@@ -42,12 +45,14 @@
 <button
 	id="field-cell-{index}"
 	type="button"
+	class="flex items-center justify-center rounded-lg transition-all duration-150 aspect-square bg-white/5 backdrop-blur-md hover:brightness-125"
 	bind:this={cell}
 	on:click={handleClick}
-	class="flex items-center justify-center rounded-lg transition-all duration-150 hover:brightness-125 aspect-square bg-white/5 backdrop-blur-md"
 	tabindex={$field[index] ? -1 : 0}
 	class:cross={$field[index] === 'X'}
 	class:circle={$field[index] === 'O'}
+	class:empty={!$field[index]}
+	class:game-over={!!$winner || $isTie}
 	class:winner={$winner && belongsToWinType}
 	class:pointer-events-none={$field[index] || $winner}
 	disabled={!!$winner || !!$field[index]}
@@ -67,6 +72,9 @@
 <style lang="postcss">
 	.cross.winner {
 		@apply brightness-100 bg-red-500/30;
+	}
+	button.game-over:not(.winner) {
+		@apply brightness-75;
 	}
 	.circle.winner {
 		@apply brightness-100 bg-blue-500/30;

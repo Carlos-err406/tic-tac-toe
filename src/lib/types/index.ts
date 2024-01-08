@@ -24,3 +24,10 @@ export type FieldType = [
 	CellType,
 	CellType
 ];
+
+export type ConfettiTrigger = {
+	clear: () => void;
+	triggerCrossConfetti: () => void;
+	triggerCircleConfetti: () => void;
+	triggerTieConfetti: () => void;
+};

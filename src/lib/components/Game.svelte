@@ -1,14 +1,11 @@
 <script lang="ts">
-	import { WinType, type ThreeCells, type WinCheck } from '$lib/types';
-	import { getConfetti } from '$lib/utils';
-	import confetti from 'canvas-confetti';
+	import { WinType, type ThreeCells, type WinCheck, type ConfettiTrigger } from '$lib/types';
 	import { setContext } from 'svelte';
 	import Field from './Field.svelte';
 	import Player from './Player.svelte';
 	import RestartButton from './RestartButton.svelte';
 	import Turn from './Turn.svelte';
 	import {
-		createClearConfettiStore,
 		createCrossTurnStore,
 		createFieldStore,
 		createIsTieStore,
@@ -16,21 +13,31 @@
 		createWinTypeStore,
 		createWinnerStore
 	} from './stores';
+	import { createConfettiTrigger } from '$lib';
+	import type {
+		CrossTurnStore,
+		FieldStore,
+		IsTieStore,
+		TurnStore,
+		WinTypeStore,
+		WinnerStore
+	} from '$lib/types/storeTypes';
 
-	let turn = createTurnStore();
-	let field = createFieldStore();
-	let winner = createWinnerStore();
-	let winType = createWinTypeStore();
-	let crossTurn = createCrossTurnStore(turn);
-	let isTie = createIsTieStore(turn, winner);
-	const clearConfetti = createClearConfettiStore();
+	const turn: TurnStore = createTurnStore();
+	let field: FieldStore = createFieldStore();
+	const winner: WinnerStore = createWinnerStore();
+	const winType: WinTypeStore = createWinTypeStore();
+	const crossTurn: CrossTurnStore = createCrossTurnStore(turn);
+	const isTie: IsTieStore = createIsTieStore(turn, winner);
+	const confettiTrigger: ConfettiTrigger = createConfettiTrigger();
 	setContext('field', field);
 	setContext('turn', turn);
 	setContext('crossTurn', crossTurn);
 	setContext('winner', winner);
 	setContext('winType', winType);
 	setContext('isTie', isTie);
-	setContext('clearConfetti', clearConfetti);
+	setContext('confettiTrigger', confettiTrigger);
+
 	const analyze = () => {
 		const check: WinCheck[] = getWinCheckArray();
 		for (const row of check) {
@@ -66,41 +73,12 @@
 	};
 
 	const triggerWinAnimation = async () => {
-		const {
-			cross: { cross, color: crossColor },
-			circle: { circle, color: circleColor }
-		} = getConfetti();
-
-		let shapes: confetti.Shape[] = [];
-		let colors: string[] = [];
 		if ($winner === 'X') {
-			shapes = [cross];
-			colors = [crossColor];
+			confettiTrigger.triggerCrossConfetti();
 		} else if ($winner === 'O') {
-			shapes = [circle];
-			colors = [circleColor];
+			confettiTrigger.triggerCircleConfetti();
 		} else {
-			shapes = [cross, circle];
-			colors = [crossColor, circleColor];
-		}
-		const defaults: confetti.Options = {
-			scalar: 2,
-			particleCount: 2,
-			spread: 89,
-			startVelocity: 70,
-			shapes,
-			colors
-		};
-		const end = Date.now() + 5 * 1000;
-		const frame = () => {
-			confetti({ ...defaults, angle: 60, origin: { x: 0, y: 1 } });
-			confetti({ ...defaults, angle: 120, origin: { x: 1, y: 1 } });
-			if (Date.now() < end && !$clearConfetti) {
-				requestAnimationFrame(frame);
-			}
-		};
-		if (!$clearConfetti) {
-			requestAnimationFrame(frame);
+			confettiTrigger.triggerTieConfetti();
 		}
 	};
 </script>
