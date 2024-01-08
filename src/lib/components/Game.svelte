@@ -14,7 +14,7 @@
 		createTurnStore,
 		createWinTypeStore,
 		createWinnerStore
-	} from './stores';
+	} from '../stores';
 	import { createConfettiTrigger } from '$lib';
 	import type {
 		CrossTurnStore,
