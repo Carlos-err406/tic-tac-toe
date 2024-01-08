@@ -102,7 +102,7 @@ export function springHeight(
 	return springStore;
 }
 
-export const chunk = <T extends any>(array: T[], size: number = 1) => {
+export const chunk = <T extends any>(array: T[], size: number = 1): T[][] => {
 	const slice = (array: T[], start: number, end?: number) => {
 		let length = array == null ? 0 : array.length;
 		if (!length) {

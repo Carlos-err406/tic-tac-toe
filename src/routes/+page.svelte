@@ -37,9 +37,13 @@
 	);
 </script>
 
-<div class="flex flex-col items-center justify-center h-full">
-	<Game />
-	<Score />
+<div class="grid grid-cols-2">
+	<div class="col-span-2 w-full md:col-span-1 md:w-auto">
+		<Game />
+	</div>
+	<div class="flex w-full col-span-2 md:col-span-1 justify-center md:justify-start">
+		<Score />
+	</div>
 	{#if $gameOver}
 		<Winner />
 	{/if}

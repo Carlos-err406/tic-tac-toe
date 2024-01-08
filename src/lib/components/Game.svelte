@@ -67,11 +67,17 @@
 	};
 </script>
 
-<div class="flex flex-col items-center gap-4">
-	<div class="grid grid-cols-3 w-full">
-		<Player />
-		<Turn />
-		<RestartButton />
+<div class="flex flex-col items-center gap-4 p-2">
+	<div class="grid grid-cols-2 md:grid-cols-3 gap-y-5 md:gap-y-3 w-full">
+		<div>
+			<Player />
+		</div>
+		<div>
+			<Turn />
+		</div>
+		<div class="w-full flex justify-center col-span-2 md:col-span-1">
+			<RestartButton />
+		</div>
 	</div>
 	<Field on:played={() => $turn > 5 && !$winner && analyze()} />
 </div>

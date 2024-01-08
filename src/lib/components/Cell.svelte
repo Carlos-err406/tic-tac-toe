@@ -12,6 +12,7 @@
 	import { scale } from 'svelte/transition';
 	import Circle from './Circle.svelte';
 	import Cross from './Cross.svelte';
+	import { lg, md, sm, xl, xs, xxs } from '$lib/stores';
 
 	export let index: number;
 	let cell: HTMLButtonElement;
@@ -40,12 +41,14 @@
 		([2, 5, 8].includes(index) && $winType === WinType.COL_3) ||
 		([0, 4, 8].includes(index) && $winType === WinType.DIAG_1) ||
 		([2, 4, 6].includes(index) && $winType === WinType.DIAG_2);
+
+	$: playerSize = $xl ? 150 : $lg ? 120 : $md ? 100 : $sm ? 150 : $xs ? 90 : $xxs ? 50 : 0;
 </script>
 
 <button
 	id="field-cell-{index}"
 	type="button"
-	class="flex items-center justify-center rounded-lg transition-all duration-150 aspect-square bg-white/5 backdrop-blur-md hover:brightness-125"
+	class="flex overflow-clip flex-none items-center justify-center rounded-lg transition-all duration-150 aspect-square bg-white/5 backdrop-blur-md hover:brightness-125"
 	bind:this={cell}
 	on:click={handleClick}
 	tabindex={$field[index] ? -1 : 0}
@@ -60,11 +63,11 @@
 >
 	{#if $field[index] === 'X'}
 		<div out:scale={{ duration: 200, delay: index * 100 }}>
-			<Cross />
+			<Cross size={playerSize} />
 		</div>
 	{:else if $field[index] === 'O'}
 		<div out:scale={{ duration: 200, delay: index * 100 }}>
-			<Circle />
+			<Circle size={playerSize} />
 		</div>
 	{/if}
 </button>
