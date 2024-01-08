@@ -1,11 +1,14 @@
 import type { FieldType, PlayerType, WinType } from '$lib/types';
 import type {
 	FieldStore,
+	GameOverStore,
+	ResetterStore,
+	ResetterStores,
 	TurnStore,
 	WinTypeStore,
 	WinnerStore
 } from '$lib/types/storeTypes';
-import { derived, writable } from 'svelte/store';
+import { derived, readable, writable } from 'svelte/store';
 
 export const createTurnStore = (): TurnStore => {
 	const { subscribe, set, update } = writable<number>(1);
@@ -49,5 +52,32 @@ export const createWinTypeStore = (): WinTypeStore => {
 		set,
 		update,
 		reset: () => set(null)
+	};
+};
+
+export const createGameOverStore = (
+	turnStore: TurnStore,
+	winnerStore: WinnerStore
+): GameOverStore =>
+	derived([turnStore, winnerStore], ([$turn, $winner]) => $turn === 10 || $winner !== null);
+
+export const createResetterStore = ({
+	turn,
+	winner,
+	field,
+	winType,
+	confettiTrigger
+}: ResetterStores): ResetterStore => {
+	const { subscribe } = readable({ turn, winner, field, winType, confettiTrigger });
+	const reset = () => {
+		turn.reset();
+		winner.reset();
+		winType.reset();
+		field.set([null, null, null, null, null, null, null, null, null]);
+		confettiTrigger.clear();
+	};
+	return {
+		subscribe,
+		reset
 	};
 };

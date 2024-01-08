@@ -1,5 +1,5 @@
 import type { Invalidator, Readable, Subscriber, Unsubscriber } from 'svelte/store';
-import type { FieldType, PlayerType, WinType } from '.';
+import type { ConfettiTrigger, FieldType, PlayerType, WinType } from '.';
 
 type Subscribe<T> = (
 	this: void,
@@ -15,6 +15,7 @@ type Store<T> = {
 };
 export type CrossTurnStore = Readable<boolean>;
 export type IsTieStore = Readable<boolean>;
+export type GameOverStore = Readable<boolean>;
 
 export type TurnStore = Store<number> & {
 	reset: () => void;
@@ -26,5 +27,16 @@ export type WinnerStore = Store<PlayerType | null> & {
 	reset: () => void;
 };
 export type WinTypeStore = Store<WinType | null> & {
+	reset: () => void;
+};
+
+export interface ResetterStores {
+	turn: TurnStore;
+	winner: WinnerStore;
+	field: FieldStore;
+	winType: WinTypeStore;
+	confettiTrigger: ConfettiTrigger;
+}
+export type ResetterStore = Readable<ResetterStores> & {
 	reset: () => void;
 };

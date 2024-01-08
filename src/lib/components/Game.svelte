@@ -8,7 +8,9 @@
 	import {
 		createCrossTurnStore,
 		createFieldStore,
+		createGameOverStore,
 		createIsTieStore,
+		createResetterStore,
 		createTurnStore,
 		createWinTypeStore,
 		createWinnerStore
@@ -17,11 +19,14 @@
 	import type {
 		CrossTurnStore,
 		FieldStore,
+		GameOverStore,
 		IsTieStore,
+		ResetterStore,
 		TurnStore,
 		WinTypeStore,
 		WinnerStore
 	} from '$lib/types/storeTypes';
+	import Winner from './Winner.svelte';
 
 	const turn: TurnStore = createTurnStore();
 	let field: FieldStore = createFieldStore();
@@ -30,6 +35,14 @@
 	const crossTurn: CrossTurnStore = createCrossTurnStore(turn);
 	const isTie: IsTieStore = createIsTieStore(turn, winner);
 	const confettiTrigger: ConfettiTrigger = createConfettiTrigger();
+	const gameOver: GameOverStore = createGameOverStore(turn, winner);
+	const resetter: ResetterStore = createResetterStore({
+		turn,
+		winner,
+		field,
+		winType,
+		confettiTrigger
+	});
 	setContext('field', field);
 	setContext('turn', turn);
 	setContext('crossTurn', crossTurn);
@@ -37,6 +50,8 @@
 	setContext('winType', winType);
 	setContext('isTie', isTie);
 	setContext('confettiTrigger', confettiTrigger);
+	setContext('gameOver', gameOver);
+	setContext('resetter', resetter);
 
 	const analyze = () => {
 		const check: WinCheck[] = getWinCheckArray();
@@ -91,3 +106,7 @@
 	</div>
 	<Field on:played={() => $turn > 5 && !$winner && analyze()} />
 </div>
+
+{#if $gameOver}
+	<Winner />
+{/if}
