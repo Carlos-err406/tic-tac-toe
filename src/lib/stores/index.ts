@@ -130,3 +130,7 @@ export const md = derived(clientWidth, ($clientWidth) => $clientWidth >= 768);
 export const lg = derived(clientWidth, ($clientWidth) => $clientWidth >= 1024);
 export const xl = derived(clientWidth, ($clientWidth) => $clientWidth >= 1280);
 export const xxl = derived(clientWidth, ($clientWidth) => $clientWidth >= 1536);
+
+export const playerSize = derived([xxs, xs, sm, md, lg, xl], ([$xxs, $xs, $sm, $md, $lg, $xl]) =>
+	$xl ? 150 : $lg ? 120 : $md ? 100 : $sm ? 150 : $xs ? 90 : $xxs ? 50 : 0
+);
