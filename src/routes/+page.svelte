@@ -1,50 +1,20 @@
 <script lang="ts">
-	import { createConfettiTrigger } from '$lib';
-	import Game from '$lib/components/Game.svelte';
-	import Score from '$lib/components/ScoreTable.svelte';
-	import Winner from '$lib/components/Winner.svelte';
-	import {
-		createCrossTurnStore,
-		createFieldStore,
-		createGameOverStore,
-		createIsTieStore,
-		createResetterStore,
-		createScoreStore,
-		createTurnStore,
-		createWinTypeStore,
-		createWinnerStore
-	} from '$lib/stores';
-	import { setContext } from 'svelte';
-	const score = setContext('score', createScoreStore());
-	const turn = setContext('turn', createTurnStore());
-	let field = setContext('field', createFieldStore());
-	const winner = setContext('winner', createWinnerStore());
-	const winType = setContext('winType', createWinTypeStore());
-	const confettiTrigger = setContext('confettiTrigger', createConfettiTrigger());
-	const gameOver = setContext('gameOver', createGameOverStore(turn, winner));
-	setContext('crossTurn', createCrossTurnStore(turn));
-	setContext('isTie', createIsTieStore(turn, winner));
-	setContext(
-		'resetter',
-		createResetterStore({
-			turn,
-			winner,
-			field,
-			winType,
-			confettiTrigger,
-			score
-		})
-	);
+	import LocalMatchForm from '$lib/components/LocalMatchForm.svelte';
+	import OnlineMatchForm from '$lib/components/OnlineMatchForm.svelte';
+	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
+	let mounted = false;
+	onMount(() => (mounted = true));
 </script>
 
-<div class="grid grid-cols-2">
-	<div class="col-span-2 w-full md:col-span-1 md:w-auto">
-		<Game />
-	</div>
-	<div class="flex w-full col-span-2 md:col-span-1 justify-center md:justify-start">
-		<Score />
-	</div>
-	{#if $gameOver}
-		<Winner />
+<div class="w-full h-full flex flex-col justify-center items-center">
+	{#if mounted}
+		<div in:slide={{ axis: 'y', duration: 200 }} class="border-2 border-slate-500 rounded p-3">
+			<h1 class="text-3xl font-bold mb-5 text-center">Tic Tac Toe</h1>
+			<div class="grid w-full grid-cols-2">
+				<LocalMatchForm />
+				<OnlineMatchForm />
+			</div>
+		</div>
 	{/if}
 </div>

@@ -6,21 +6,23 @@
 	const crossTurn = getContext<CrossTurnStore>('crossTurn');
 	const winner = getContext<WinnerStore>('winner');
 	const isTie = getContext<IsTieStore>('isTie');
+	const [xName, oName] = getContext<[string, string]>('names');
 </script>
 
-<div class="text-3xl flex gap-3 h-full justify-center items-center">
-	Player
-	<span>
-		{#if $isTie}
-			-
-		{:else if $winner === 'X'}
-			<Cross size={30} />
-		{:else if $winner === 'O'}
-			<Circle size={30} duration={3} />
-		{:else if $crossTurn}
-			<Cross size={30} />
-		{:else}
-			<Circle size={30} duration={3} />
-		{/if}
-	</span>
+<div class="text-2xl gap-3 h-full justify-center flex items-center">
+	{#if $isTie}
+		-
+	{:else if $winner === 'X'}
+		{xName}
+		<Cross size={30} />
+	{:else if $winner === 'O'}
+		{oName}
+		<Circle size={30} duration={3} />
+	{:else if $crossTurn}
+		{xName}
+		<Cross size={30} />
+	{:else}
+		{oName}
+		<Circle size={30} duration={3} />
+	{/if}
 </div>

@@ -1,10 +1,10 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import { cubicOut } from 'svelte/easing';
-import type { TransitionConfig } from 'svelte/transition';
 import confetti from 'canvas-confetti';
-import { writable } from 'svelte/store';
+import { clsx, type ClassValue } from 'clsx';
+import { cubicOut } from 'svelte/easing';
 import { spring } from 'svelte/motion';
+import { writable } from 'svelte/store';
+import type { TransitionConfig } from 'svelte/transition';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -142,3 +142,24 @@ export const chunk = <T extends any>(array: T[], size: number = 1): T[][] => {
 	}
 	return result;
 };
+
+export const delay = (ms: number): Promise<void> => new Promise((res) => setTimeout(res, ms));
+
+export const copy = (text?: string, callbaclk?: () => void) => {
+	if (!text) return;
+	if (navigator.clipboard) {
+		navigator.clipboard.writeText(text).then(() => {
+			callbaclk?.();
+		});
+	}
+};
+
+export const alphabet = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
+export const randString = (length: number) => {
+	let result = '';
+	const charactersLength = alphabet.length;
+	for (let i = 0; i < length; i++) {
+		result += alphabet.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+}

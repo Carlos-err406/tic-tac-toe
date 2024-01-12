@@ -75,7 +75,7 @@
 		<div>
 			<Turn />
 		</div>
-		<div class="w-full flex justify-center col-span-2 md:col-span-1">
+		<div class="w-full flex justify-center items-center col-span-2 md:col-span-1">
 			<RestartButton />
 		</div>
 	</div>
