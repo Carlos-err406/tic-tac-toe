@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Games {
-  roomID       String      @id @unique
+  roomID       String      @id @unique @db.VarChar(6)
   inviteLink   String
   gameLink     String
   state        GameState   @default(value: CREATED)
@@ -41,13 +41,13 @@ model Boards {
 
 model Challengers {
   id    Int     @id @default(autoincrement())
-  name  String
+  name  String  @db.VarChar(8)
   Games Games[]
 }
 
 model Opponents {
   id   Int     @id @default(autoincrement())
-  name String
+  name String  @db.VarChar(8)
   Game Games[]
 }
 
