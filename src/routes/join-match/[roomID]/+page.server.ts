@@ -7,16 +7,16 @@ import type { PageServerLoad } from './$types';
 const useRandom = USE_RANDOM_NAMES === '1';
 
 export const load: PageServerLoad = async ({ params }) => {
-	let game = await prisma.game.findUnique({
+	let game = await prisma.games.findUnique({
 		where: {
 			roomID: params.roomID
 		}
 	});
 
 	//TODO error page for these cases
-	if (!game || game.state  === $Enums.GameState.IN_PROGRESS) throw redirect(302, '/');
+	if (!game || game.state === $Enums.GameState.IN_PROGRESS) throw redirect(302, '/');
 
-	game = await prisma.game.update({
+	game = await prisma.games.update({
 		where: {
 			roomID: params.roomID
 		},

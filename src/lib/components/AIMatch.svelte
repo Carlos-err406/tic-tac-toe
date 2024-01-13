@@ -13,7 +13,7 @@
 	};
 </script>
 
-<Card.Root class="w-[304px] min-h-[350px] opacity-50">
+<Card.Root class="w-[304px] min-h-[400px] opacity-50">
 	<Card.Header>
 		<Card.Title>AI Match</Card.Title>
 		<Card.Description>Play in this device against AI</Card.Description>

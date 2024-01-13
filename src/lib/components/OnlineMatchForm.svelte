@@ -26,7 +26,7 @@
 	let height = 300;
 </script>
 
-<Card.Root class="w-[304px] min-h-[350px]">
+<Card.Root class="w-[304px] min-h-[400px]">
 	<Card.Header>
 		<Card.Title>Online Match</Card.Title>
 		<Card.Description>Play online with a friend</Card.Description>

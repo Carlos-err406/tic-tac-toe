@@ -10,7 +10,7 @@ export const POST = async ({ request }) => {
 	const generateGameLink = (roomID: string): string => `${PROTOCOL}${VERCEL_URL}/game/${roomID}`;
 	const { challengerName } = await request.json();
 	const roomID = randString(6);
-	const game = await prisma.game.create({
+	const game = await prisma.games.create({
 		data: {
 			roomID,
 			inviteLink: generateInviteLink(roomID),

@@ -13,7 +13,7 @@
 	};
 </script>
 
-<Card.Root class="w-[304px] min-h-[350px]">
+<Card.Root class="w-[304px] min-h-[400px]">
 	<Card.Header>
 		<Card.Title>Local Match</Card.Title>
 		<Card.Description>Play in this device</Card.Description>
