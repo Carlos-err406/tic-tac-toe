@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model Game {
+  roomID       String     @id @unique
+  inviteLink   String
+  gameLink     String
+  state        GameState  @default(value: CREATED)
+  board        Board      @relation(fields: [boardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  challenger   Challenger @relation(fields: [challengerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  opponent     Opponent   @relation(fields: [opponentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  score        Score      @relation(fields: [scoreId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  boardId      Int
+  challengerId Int
+  opponentId   Int
+  scoreId      Int
+}
+
+model Score {
+  id   Int    @id @default(autoincrement())
+  X    Int    @default(0)
+  O    Int    @default(0)
+  Game Game[]
+}
+
+model Board {
+  id    Int      @id @default(autoincrement())
+  cells String[] @default(value: ["", "", "", "", "", "", "", "", ""])
+  Game  Game[]
+}
+
+model Challenger {
+  id   Int    @id @default(autoincrement())
+  name String
+  Game Game[]
+}
+
+model Opponent {
+  id   Int    @id @default(autoincrement())
+  name String
+  Game Game[]
+}
+
+enum GameState {
+  CREATED
+  OPONENT_JOINING
+  IN_PROGRESS
+  O_WON
+  X_WON
+  DRAW
+  X
+  O
+}

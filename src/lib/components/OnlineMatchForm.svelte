@@ -1,54 +1,58 @@
 <script lang="ts">
+	import type { Game } from '@prisma/client';
 	import { page } from '$app/stores';
-	import { randString } from '$lib/utils';
-	import { slide } from 'svelte/transition';
+	import * as Card from '$lib/components/ui/card';
+	import { createGame, deleteGame } from '$lib/modules/Game';
 	import PlayerNameInput from './PlayerNameInput.svelte';
 	import TypingMachine from './TypingMachine.svelte';
 	let form: HTMLFormElement;
 	let roomID: string;
 	let inviteLink: string;
 	let playerName = $page.data.name3;
+	let game: Game;
 	let state: 'idle' | 'creating' | 'created' = 'idle';
-	const createRoom = () => {
+	const createRoom = async () => {
 		if (roomID) {
-			//TODO delete room
-			state = 'idle';
-			roomID = '';
-			inviteLink = '';
+			await deleteGame(roomID);
 		}
 		if (form.reportValidity()) {
 			state = 'creating';
-			//TODO actually create room
-			setTimeout(() => {
-				state = 'created';
-				roomID = randString(6);
-				inviteLink = window.origin + `/join-match/${roomID}?x-name=${playerName}`;
-			}, 2000);
+			game = await createGame(playerName);
+			state = 'created';
+			inviteLink = game.inviteLink;
+			roomID = game.roomID;
 		}
 	};
+	let height = 300;
 </script>
 
-<div class="px-2 flex flex-col h-full w-full gap-4 items-center">
-	<h2 class="text-2xl font-bold mb-5">Online Match</h2>
-	<form
-		bind:this={form}
-		on:submit|preventDefault={createRoom}
-		class="flex flex-col gap-4 items-center"
-	>
-		<PlayerNameInput playerType="X" bind:value={playerName} />
-		<button class="btn-text" on:click={createRoom}>Create Room</button>
-		{#if state !== 'idle'}
-			<div class="" in:slide={{ axis: 'y', duration: 250 }}>
-				<div class="text-lg font-bold text-center">
-					<TypingMachine text={roomID ? 'Room created' : 'Creating room'} />
-				</div>
-				<div class="flex flex-col h-10 my-4">
+<Card.Root class="w-[304px] min-h-[350px]">
+	<Card.Header>
+		<Card.Title>Online Match</Card.Title>
+		<Card.Description>Play online with a friend</Card.Description>
+	</Card.Header>
+	<Card.Content>
+		<div class="flex flex-col w-full">
+			<form bind:this={form} class="flex flex-col gap-4 items-center" on:submit|preventDefault>
+				<PlayerNameInput playerType="X" bind:value={playerName} />
+				<button type="submit" class="btn-text" on:click={createRoom}>Create room</button>
+			</form>
+		</div>
+	</Card.Content>
+	<Card.Footer style="height: {height}px">
+		<div class="flex w-full flex-col" bind:clientHeight={height}>
+			<div>
+				<TypingMachine
+					class="font-bold text-center text-lg"
+					text={state === 'idle' ? '' : roomID ? 'Room created' : 'Creating room'}
+				/>
+				<p>
 					{#if inviteLink}
-						Send this link to your oponent
-						<TypingMachine type="url" text={inviteLink} />
+						<p>Send this link to your oponent</p>
+						<TypingMachine speed={30} class="break-all" type="url" text={inviteLink} />
 					{/if}
-				</div>
+				</p>
 			</div>
-		{/if}
-	</form>
-</div>
+		</div>
+	</Card.Footer>
+</Card.Root>

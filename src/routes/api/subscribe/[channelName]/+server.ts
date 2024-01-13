@@ -1,8 +1,8 @@
 import type { RequestHandler } from '@sveltejs/kit';
-
-export const GET: RequestHandler = async ({ params, locals }) => {
-	const { client } = locals;
+import getPGClient from '$lib/pg';
+export const GET: RequestHandler = async ({ params }) => {
 	const { channelName } = params;
+	const client = await getPGClient();
 	await client.query(`LISTEN ${channelName}`);
 	const encoder = new TextEncoder();
 	const readable = new ReadableStream({

@@ -101,6 +101,10 @@ input[type='text'] {
 	animation: pulse 1.5s infinite;
 }
 
-.btn-text{
-	@apply px-3 py-2 w-fit focus:underline hover:underline outline-none
+.btn-text {
+	@apply px-3 py-2 w-fit focus:underline hover:underline outline-none;
+}
+
+button:disabled {
+	@apply opacity-50 pointer-events-none;
 }

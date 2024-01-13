@@ -17,8 +17,8 @@
 	import { setContext } from 'svelte';
 	import type { PageData } from './$types';
 	export let data: PageData;
-	const { name1, name2 } = data;
-	setContext('names', [name1, name2]);
+	const { game } = data;
+	setContext('names', [game.challenger.name, game.opponent.name]);
 	const score = setContext('score', createScoreStore());
 	const turn = setContext('turn', createTurnStore());
 	let field = setContext('field', createFieldStore());
