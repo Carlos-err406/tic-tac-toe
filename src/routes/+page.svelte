@@ -3,11 +3,20 @@
 	import LocalMatchForm from '$lib/components/LocalMatchForm.svelte';
 	import OnlineMatchForm from '$lib/components/OnlineMatchForm.svelte';
 	import TypingMachine from '$lib/components/TypingMachine.svelte';
+	import { Subscriber } from '$lib/events';
 	import { lg, sm, xxs } from '$lib/stores';
 	import { onMount } from 'svelte';
+	import type { Writable } from 'svelte/store';
 	import { scale } from 'svelte/transition';
 	let mounted = false;
-	onMount(() => (mounted = true));
+	// let s: Subscriber<{ name: string }>;
+	// let p: Writable<{ name: string }>;
+	onMount(async () => {
+		// s = new Subscriber<{ name: string }>('roomid--test');
+		// [p] = s.subscribe();
+		mounted = true;
+	});
+	// $: console.log($p);
 </script>
 
 <div class="w-full h-full flex flex-col justify-center items-center">

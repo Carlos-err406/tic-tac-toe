@@ -6,11 +6,13 @@ export class Subscriber<T> {
 	public channel: string;
 	public payload: Writable<T> = writable();
 	public payloads: Writable<T[]> = writable([]);
-	constructor(channel: string) {
+	private once: boolean = false;
+	constructor(channel: string, once: boolean = false) {
 		this.channel = channel;
+		this.once = once;
 	}
 	public subscribe(): [Writable<T>, Writable<T[]>] {
-		fetch(`/subscribe/${this.channel}`).then(async (response) => {
+		fetch(`/api/subscribe/${this.channel}`).then(async (response) => {
 			this.reader = response.body!.pipeThrough(new TextDecoderStream()).getReader();
 			while (true) {
 				const { value, done } = await this.reader.read();
@@ -19,6 +21,10 @@ export class Subscriber<T> {
 				const data = notificationResponse.payload;
 				this.payload.set(data);
 				this.payloads.update((payloads) => [data, ...payloads]);
+				if (this.once) {
+					this.unsubscribe();
+					break;
+				}
 			}
 		});
 		return [this.payload, this.payloads];

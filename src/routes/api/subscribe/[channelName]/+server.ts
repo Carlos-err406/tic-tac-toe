@@ -3,7 +3,7 @@ import getPGClient from '$lib/pg';
 export const GET: RequestHandler = async ({ params }) => {
 	const { channelName } = params;
 	const client = await getPGClient();
-	await client.query(`LISTEN ${channelName}`);
+	await client.query(`LISTEN "${channelName}"`);
 	const encoder = new TextEncoder();
 	const readable = new ReadableStream({
 		async start(controller) {

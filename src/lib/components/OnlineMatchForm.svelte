@@ -1,8 +1,10 @@
 <script lang="ts">
-	import type { Game } from '@prisma/client';
 	import { page } from '$app/stores';
 	import * as Card from '$lib/components/ui/card';
-	import { createGame, deleteGame } from '$lib/modules/Game';
+	import { Subscriber } from '$lib/events';
+	import { createGame } from '$lib/modules/Game';
+	import type { Game } from '@prisma/client';
+	import type { Writable } from 'svelte/store';
 	import PlayerNameInput from './PlayerNameInput.svelte';
 	import TypingMachine from './TypingMachine.svelte';
 	let form: HTMLFormElement;
@@ -11,9 +13,12 @@
 	let playerName = $page.data.name3;
 	let game: Game;
 	let state: 'idle' | 'creating' | 'created' = 'idle';
+	let opponentJoiningSubscriber: Subscriber<Game>;
+	let opponentJoiningPayload: Writable<Game>;
 	const createRoom = async () => {
 		if (roomID) {
-			await deleteGame(roomID);
+			await opponentJoiningSubscriber.unsubscribe();
+			// await deleteGame(roomID);
 		}
 		if (form.reportValidity()) {
 			state = 'creating';
@@ -21,6 +26,8 @@
 			state = 'created';
 			inviteLink = game.inviteLink;
 			roomID = game.roomID;
+			opponentJoiningSubscriber = new Subscriber<Game>(`${roomID}##opponent_joining`, true);
+			[opponentJoiningPayload] = opponentJoiningSubscriber.subscribe();
 		}
 	};
 	let height = 300;

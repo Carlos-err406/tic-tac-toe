@@ -154,7 +154,7 @@ export const copy = (text?: string, callbaclk?: () => void) => {
 	}
 };
 
-export const alphabet = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
+export const alphabet = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
 export const randString = (length: number) => {
 	let result = '';
 	const charactersLength = alphabet.length;
