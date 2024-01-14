@@ -1,12 +1,12 @@
-import type { ChanelType, EventNotificationResponse } from '$lib/types/EventNotification';
+import type { EventNotificationResponse } from '$lib/types/EventNotification';
 import { writable, type Writable } from 'svelte/store';
 
 export class Subscriber<T> {
 	private reader!: ReadableStreamDefaultReader<string>;
-	public channel: ChanelType;
+	public channel: string;
 	public payload: Writable<T> = writable();
 	public payloads: Writable<T[]> = writable([]);
-	constructor(channel: ChanelType) {
+	constructor(channel: string) {
 		this.channel = channel;
 	}
 	public subscribe(): [Writable<T>, Writable<T[]>] {
@@ -23,9 +23,9 @@ export class Subscriber<T> {
 		});
 		return [this.payload, this.payloads];
 	}
-	public unsubscribe() {
+	public async unsubscribe() {
 		try {
-			this.reader.cancel();
+			await this.reader.cancel();
 		} catch {}
 	}
 }

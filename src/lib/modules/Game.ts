@@ -8,8 +8,8 @@ export const createGame = async (challenger: string): Promise<Game> =>
 export const deleteGame = async (roomID: string): Promise<void> =>
 	fetch(`/api/game/${roomID}`, { method: 'DELETE' }).then((res) => res.json());
 
-export const joinMatch = async (roomID: string, oponent: string): Promise<Game> =>
+export const joinMatch = async (roomID: string, opponent: string): Promise<Game> =>
 	fetch(`/api/game/${roomID}/join-match`, {
 		method: 'PATCH',
-		body: JSON.stringify({ oponentName: oponent })
+		body: JSON.stringify({ opponentName: opponent })
 	}).then((res) => res.json());

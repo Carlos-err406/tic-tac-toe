@@ -7,7 +7,7 @@ import type { PageServerLoad } from './$types';
 const useRandom = USE_RANDOM_NAMES === '1';
 
 export const load: PageServerLoad = async ({ params }) => {
-	let game = await prisma.games.findUnique({
+	let game = await prisma.game.findUnique({
 		where: {
 			roomID: params.roomID
 		}
@@ -16,12 +16,12 @@ export const load: PageServerLoad = async ({ params }) => {
 	//TODO error page for these cases
 	if (!game || game.state === $Enums.GameState.IN_PROGRESS) throw redirect(302, '/');
 
-	game = await prisma.games.update({
+	game = await prisma.game.update({
 		where: {
 			roomID: params.roomID
 		},
 		data: {
-			state: $Enums.GameState.OPONENT_JOINING
+			state: $Enums.GameState.OPPONENT_JOINING
 		}
 	});
 	const name: string = useRandom

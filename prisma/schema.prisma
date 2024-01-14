@@ -10,50 +10,51 @@ datasource db {
   url      = env("POSTGRES_PRISMA_URL")
 }
 
-model Games {
-  roomID       String      @id @unique @db.VarChar(6)
+model Game {
+  roomID       String     @id @unique @db.VarChar(6)
   inviteLink   String
   gameLink     String
-  state        GameState   @default(value: CREATED)
-  board        Boards      @relation(fields: [boardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  challenger   Challengers @relation(fields: [challengerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  opponent     Opponents   @relation(fields: [opponentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  score        Scores      @relation(fields: [scoreId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  state        GameState  @default(value: CREATED)
+  board        Board      @relation(fields: [boardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  challenger   Challenger @relation(fields: [challengerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  opponent     Opponent   @relation(fields: [opponentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  score        Score      @relation(fields: [scoreId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   boardId      Int
   challengerId Int
   opponentId   Int
   scoreId      Int
-  createdAt    DateTime    @default(now())
+  createdAt    DateTime   @default(now())
 }
 
-model Scores {
-  id    Int     @id @default(autoincrement())
-  X     Int     @default(0)
-  O     Int     @default(0)
-  Games Games[]
+model Score {
+  id    Int    @id @default(autoincrement())
+  X     Int    @default(0)
+  O     Int    @default(0)
+  Games Game[]
 }
 
-model Boards {
+model Board {
   id    Int      @id @default(autoincrement())
   cells String[] @default(value: ["", "", "", "", "", "", "", "", ""])
-  Games Games[]
+  Games Game[]
 }
 
-model Challengers {
-  id    Int     @id @default(autoincrement())
-  name  String  @db.VarChar(8)
-  Games Games[]
+model Challenger {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(8)
+  Games Game[]
 }
 
-model Opponents {
-  id   Int     @id @default(autoincrement())
-  name String  @db.VarChar(8)
-  Game Games[]
+model Opponent {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(8)
+  Games Game[]
 }
 
 enum GameState {
   CREATED
-  OPONENT_JOINING
+  OPPONENT_JOINING
+  OPPONENT_JOINED
   IN_PROGRESS
   O_WON
   X_WON

@@ -48,7 +48,7 @@
 				/>
 				<p>
 					{#if inviteLink}
-						<p>Send this link to your oponent</p>
+						<p>Send this link to your opponent</p>
 						<TypingMachine speed={30} class="break-all" type="url" text={inviteLink} />
 					{/if}
 				</p>
