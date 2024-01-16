@@ -6,12 +6,12 @@
 	import { getContext } from 'svelte';
 
 	const resetter = getContext<ResetterStore>('resetter');
-	const field = getContext<FieldStore>('field');
+	const board = getContext<FieldStore>('board');
 
 	const restart = () => {
 		resetter.reset();
 	};
-	$: disabled = !$field.some((value) => value);
+	$: disabled = !$board.some((value) => value);
 </script>
 
 <button

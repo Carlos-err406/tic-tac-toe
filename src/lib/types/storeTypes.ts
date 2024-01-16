@@ -33,7 +33,7 @@ export type WinTypeStore = Store<WinType | null> & {
 export interface ResetterStores {
 	turn: TurnStore;
 	winner: WinnerStore;
-	field: FieldStore;
+	board: FieldStore;
 	winType: WinTypeStore;
 	confettiTrigger: ConfettiTrigger;
 	score: ScoreStore;

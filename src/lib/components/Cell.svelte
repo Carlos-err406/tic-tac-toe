@@ -18,14 +18,14 @@
 	let cell: HTMLButtonElement;
 	const turn = getContext<TurnStore>('turn');
 	const winType = getContext<WinTypeStore>('winType');
-	const field = getContext<FieldStore>('field');
+	const board = getContext<FieldStore>('board');
 	const winner = getContext<WinnerStore>('winner');
 	const isTie = getContext<IsTieStore>('isTie');
 	const crossTurn = getContext<CrossTurnStore>('crossTurn');
 	const dispatch = createEventDispatcher();
 	const handleClick = () => {
-		if (!$field[index]) {
-			$field[index] = $crossTurn ? 'X' : 'O';
+		if (!$board[index]) {
+			$board[index] = $crossTurn ? 'X' : 'O';
 			cell.blur();
 			turn.update((state) => state + 1);
 			dispatch('played');
@@ -47,26 +47,26 @@
 
 {#if mounted}
 	<button
-		id="field-cell-{index}"
+		id="board-cell-{index}"
 		type="button"
 		class="flex overflow-clip flex-none items-center justify-center rounded-lg transition-all duration-150 aspect-square bg-white/5 backdrop-blur-md hover:brightness-125"
 		bind:this={cell}
 		on:click={handleClick}
-		tabindex={$field[index] ? -1 : 0}
-		class:cross={$field[index] === 'X'}
-		class:circle={$field[index] === 'O'}
-		class:empty={!$field[index]}
+		tabindex={$board[index] ? -1 : 0}
+		class:cross={$board[index] === 'X'}
+		class:circle={$board[index] === 'O'}
+		class:empty={!$board[index]}
 		class:game-over={!!$winner || $isTie}
 		class:winner={$winner && belongsToWinType}
-		class:pointer-events-none={$field[index] || $winner}
-		disabled={!!$winner || !!$field[index]}
+		class:pointer-events-none={$board[index] || $winner}
+		disabled={!!$winner || !!$board[index]}
 		in:scale={{ duration: 200, delay: index * 100 }}
 	>
-		{#if $field[index] === 'X'}
+		{#if $board[index] === 'X'}
 			<div out:scale={{ duration: 200, delay: index * 100 }}>
 				<Cross size={$playerSize} />
 			</div>
-		{:else if $field[index] === 'O'}
+		{:else if $board[index] === 'O'}
 			<div out:scale={{ duration: 200, delay: index * 100 }}>
 				<Circle size={$playerSize} />
 			</div>

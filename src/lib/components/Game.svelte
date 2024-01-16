@@ -13,12 +13,12 @@
 	import RestartButton from './RestartButton.svelte';
 	import Turn from './Turn.svelte';
 
-	const [winner, winType, score, turn, field, confettiTrigger] = [
+	const [winner, winType, score, turn, board, confettiTrigger] = [
 		getContext<WinnerStore>('winner'),
 		getContext<WinTypeStore>('winType'),
 		getContext<ScoreStore>('score'),
 		getContext<TurnStore>('turn'),
-		getContext<FieldStore>('field'),
+		getContext<FieldStore>('board'),
 		getContext<ConfettiTrigger>('confettiTrigger')
 	];
 	const analyze = () => {
@@ -39,14 +39,14 @@
 	};
 
 	const getWinCheckArray = (): WinCheck[] => [
-		{ cells: [$field[0], $field[1], $field[2]], winType: WinType.ROW_1 },
-		{ cells: [$field[3], $field[4], $field[5]], winType: WinType.ROW_2 },
-		{ cells: [$field[6], $field[7], $field[8]], winType: WinType.ROW_3 },
-		{ cells: [$field[0], $field[3], $field[6]], winType: WinType.COL_1 },
-		{ cells: [$field[1], $field[4], $field[7]], winType: WinType.COL_2 },
-		{ cells: [$field[2], $field[5], $field[8]], winType: WinType.COL_3 },
-		{ cells: [$field[0], $field[4], $field[8]], winType: WinType.DIAG_1 },
-		{ cells: [$field[2], $field[4], $field[6]], winType: WinType.DIAG_2 }
+		{ cells: [$board[0], $board[1], $board[2]], winType: WinType.ROW_1 },
+		{ cells: [$board[3], $board[4], $board[5]], winType: WinType.ROW_2 },
+		{ cells: [$board[6], $board[7], $board[8]], winType: WinType.ROW_3 },
+		{ cells: [$board[0], $board[3], $board[6]], winType: WinType.COL_1 },
+		{ cells: [$board[1], $board[4], $board[7]], winType: WinType.COL_2 },
+		{ cells: [$board[2], $board[5], $board[8]], winType: WinType.COL_3 },
+		{ cells: [$board[0], $board[4], $board[8]], winType: WinType.DIAG_1 },
+		{ cells: [$board[2], $board[4], $board[6]], winType: WinType.DIAG_2 }
 	];
 
 	const checkRow = ([a, b, c]: ThreeCells) => {

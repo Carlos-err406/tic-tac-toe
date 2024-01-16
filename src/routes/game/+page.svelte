@@ -20,7 +20,7 @@
 	setContext('names', names);
 	const score = setContext('score', createScoreStore());
 	const turn = setContext('turn', createTurnStore());
-	let field = setContext('field', createFieldStore());
+	let board = setContext('board', createFieldStore());
 	const winner = setContext('winner', createWinnerStore());
 	const winType = setContext('winType', createWinTypeStore());
 	const confettiTrigger = setContext('confettiTrigger', createConfettiTrigger());
@@ -32,7 +32,7 @@
 		createResetterStore({
 			turn,
 			winner,
-			field,
+			board,
 			winType,
 			confettiTrigger,
 			score

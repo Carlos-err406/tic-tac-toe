@@ -67,17 +67,17 @@ export const createGameOverStore = (
 export const createResetterStore = ({
 	turn,
 	winner,
-	field,
+	board,
 	winType,
 	confettiTrigger,
 	score
 }: ResetterStores): ResetterStore => {
-	const { subscribe } = readable({ turn, winner, field, winType, confettiTrigger, score });
+	const { subscribe } = readable({ turn, winner, board, winType, confettiTrigger, score });
 	const reset = () => {
 		turn.reset();
 		winner.reset();
 		winType.reset();
-		field.set([null, null, null, null, null, null, null, null, null]);
+		board.set([null, null, null, null, null, null, null, null, null]);
 		// score.reset();
 		confettiTrigger.clear();
 	};
