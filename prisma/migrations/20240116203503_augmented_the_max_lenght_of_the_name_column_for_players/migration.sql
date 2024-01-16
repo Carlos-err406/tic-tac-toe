@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Challenger" ALTER COLUMN "name" SET DATA TYPE VARCHAR(15);
+
+-- AlterTable
+ALTER TABLE "Opponent" ALTER COLUMN "name" SET DATA TYPE VARCHAR(15);

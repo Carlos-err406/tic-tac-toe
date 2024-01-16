@@ -41,13 +41,13 @@ model Board {
 
 model Challenger {
   id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(8)
+  name  String @db.VarChar(15)
   Games Game[]
 }
 
 model Opponent {
   id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(8)
+  name  String @db.VarChar(15)
   Games Game[]
 }
 
