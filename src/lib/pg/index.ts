@@ -1,11 +1,11 @@
 import { env } from '$env/dynamic/private';
-import pkg from 'pg';
-const { Client } = pkg;
-const client = new Client({
+import createPostgresSubscriber from 'pg-listen';
+
+const client = createPostgresSubscriber({
 	connectionString: env.POSTGRES_URL
 });
 
-const getPGClient = async () => {
+const getSubscriberClient = async () => {
 	try {
 		await client.connect();
 	} catch {}
@@ -13,4 +13,4 @@ const getPGClient = async () => {
 };
 
 export { client };
-export default getPGClient;
+export default getSubscriberClient;

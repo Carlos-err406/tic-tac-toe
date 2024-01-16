@@ -14,6 +14,10 @@
 		toast(`Your opponnent is joining ${$payload.roomID}`, {
 			description: 'You should join too ;D'
 		});
+	$: if ($payload.state === GameState.OPPONENT_JOINED)
+		toast(`Your opponnent has joined ${$payload.roomID}`, {
+			description: 'You should join too ;D'
+		});
 	const dispatch = createEventDispatcher();
 	const handleJoin = async () => await goto($payload.gameLink);
 	const handleDelete = async () => dispatch('game-deleted', $payload);

@@ -1,28 +1,17 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import getPGClient from '$lib/pg';
+import getSubscriberClient from '$lib/pg';
+
 export const GET: RequestHandler = async ({ params }) => {
-	const { channelName } = params;
-	const client = await getPGClient();
-	await client.query(`LISTEN "${channelName}"`);
+	const { channelName } = params as Record<string, string>;
+	const client = await getSubscriberClient();
+	await client.listenTo(channelName);
 	const encoder = new TextEncoder();
 	const readable = new ReadableStream({
 		async start(controller) {
-			client.on('notification', async ({ payload, channel }) => {
-				if (payload && channel === channelName) {
-					let data: string | object;
+			client.notifications.on(channelName, async (payload) => {
+				if (payload) {
 					try {
-						data = JSON.parse(payload);
-					} catch {
-						data = payload;
-					}
-					try {
-						controller.enqueue(
-							encoder.encode(
-								JSON.stringify({
-									payload: data
-								})
-							)
-						);
+						controller.enqueue(encoder.encode(JSON.stringify({ payload })));
 					} catch {}
 				}
 			});
