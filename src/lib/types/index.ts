@@ -1,3 +1,12 @@
+import {
+	GameState,
+	type Challenger,
+	type Game,
+	type Opponent,
+	type Score,
+	type Board
+} from '@prisma/client';
+
 export enum WinType {
 	ROW_1 = 1,
 	ROW_2 = 2,
@@ -30,4 +39,14 @@ export type ConfettiTrigger = {
 	triggerCrossConfetti: () => void;
 	triggerCircleConfetti: () => void;
 	triggerTieConfetti: () => void;
+};
+
+export const GameStates = {
+	[GameState.CREATED]: 'Created',
+	[GameState.DRAW]: 'Draw',
+	[GameState.IN_PROGRESS]: 'In Progress',
+	[GameState.OPPONENT_JOINED]: 'Opponent Joined',
+	[GameState.OPPONENT_JOINING]: 'Opponent Joining',
+	[GameState.O_WON]: 'O Won',
+	[GameState.X_WON]: 'X Won'
 };

@@ -1,36 +1,23 @@
-<script lang="ts">
+<script script lang="ts">
 	import { page } from '$app/stores';
 	import * as Card from '$lib/components/ui/card';
 	import { Subscriber } from '$lib/events';
 	import { createGame } from '$lib/modules/Game';
 	import type { Game } from '@prisma/client';
-	import type { Writable } from 'svelte/store';
+	import { createEventDispatcher } from 'svelte';
 	import PlayerNameInput from './PlayerNameInput.svelte';
-	import TypingMachine from './TypingMachine.svelte';
 	let form: HTMLFormElement;
-	let roomID: string;
-	let inviteLink: string;
 	let playerName = $page.data.name3;
-	let game: Game;
-	let state: 'idle' | 'creating' | 'created' = 'idle';
-	let opponentJoiningSubscriber: Subscriber<Game>;
-	let opponentJoiningPayload: Writable<Game>;
+	const dispatch = createEventDispatcher();
+
 	const createRoom = async () => {
-		if (roomID) {
-			await opponentJoiningSubscriber.unsubscribe();
-			// await deleteGame(roomID);
-		}
 		if (form.reportValidity()) {
-			state = 'creating';
-			game = await createGame(playerName);
-			state = 'created';
-			inviteLink = game.inviteLink;
-			roomID = game.roomID;
-			opponentJoiningSubscriber = new Subscriber<Game>(`${roomID}##opponent_joining`, true);
-			[opponentJoiningPayload] = opponentJoiningSubscriber.subscribe();
+			const game = await createGame(playerName);
+			const subscriber = new Subscriber<Game>(`${game.roomID}___game_update`);
+			subscriber.setPayload(game);
+			dispatch('created-game', subscriber);
 		}
 	};
-	let height = 300;
 </script>
 
 <Card.Root class="w-[304px] min-h-[400px]">
@@ -46,20 +33,4 @@
 			</form>
 		</div>
 	</Card.Content>
-	<Card.Footer style="height: {height}px">
-		<div class="flex w-full flex-col" bind:clientHeight={height}>
-			<div>
-				<TypingMachine
-					class="font-bold text-center text-lg"
-					text={state === 'idle' ? '' : roomID ? 'Room created' : 'Creating room'}
-				/>
-				<p>
-					{#if inviteLink}
-						<p>Send this link to your opponent</p>
-						<TypingMachine speed={30} class="break-all" type="url" text={inviteLink} />
-					{/if}
-				</p>
-			</div>
-		</div>
-	</Card.Footer>
 </Card.Root>

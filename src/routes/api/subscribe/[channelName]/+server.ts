@@ -8,20 +8,26 @@ export const GET: RequestHandler = async ({ params }) => {
 	const readable = new ReadableStream({
 		async start(controller) {
 			client.on('notification', async ({ payload, channel }) => {
-				try {
-					if (payload) {
-						const jsonPayload = JSON.parse(payload);
-						let data = {
-							payload: jsonPayload,
-							channel: channel
-						};
-						controller.enqueue(encoder.encode(JSON.stringify(data)));
+				if (payload && channel === channelName) {
+					let data: string | object;
+					try {
+						data = JSON.parse(payload);
+					} catch {
+						data = payload;
 					}
-				} catch (e) {}
+					try {
+						controller.enqueue(
+							encoder.encode(
+								JSON.stringify({
+									payload: data
+								})
+							)
+						);
+					} catch {}
+				}
 			});
 		}
 	});
-
 	return new Response(readable, {
 		headers: {
 			'content-type': 'text/event-stream'

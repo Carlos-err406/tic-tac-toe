@@ -1,3 +1,4 @@
+import type { Subscriber } from '$lib/events';
 import type { FieldType, PlayerType, WinType } from '$lib/types';
 import type {
 	FieldStore,
@@ -9,6 +10,7 @@ import type {
 	WinTypeStore,
 	WinnerStore
 } from '$lib/types/storeTypes';
+import type { Game } from '@prisma/client';
 import { derived, readable, writable } from 'svelte/store';
 
 export const createTurnStore = (): TurnStore => {

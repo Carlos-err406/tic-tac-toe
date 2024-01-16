@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	const { id } = params;
 	let game = await prisma.game.findUnique({
 		where: { roomID: id },
-		include: { challenger: true, opponent: true }
+		include: { challenger: true, opponent: true, board: true, score: true }
 	});
 	if (!game) throw redirect(302, '/');
 

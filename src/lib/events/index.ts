@@ -1,37 +1,46 @@
 import type { EventNotificationResponse } from '$lib/types/EventNotification';
-import { writable, type Writable } from 'svelte/store';
+import { get, writable, type Writable } from 'svelte/store';
 
 export class Subscriber<T> {
-	private reader!: ReadableStreamDefaultReader<string>;
+	protected reader!: ReadableStreamDefaultReader<string>;
 	public channel: string;
-	public payload: Writable<T> = writable();
-	public payloads: Writable<T[]> = writable([]);
-	private once: boolean = false;
-	constructor(channel: string, once: boolean = false) {
+	public payload: Writable<T>;
+	public payloads: Writable<T[]>;
+	protected subscribed: boolean;
+	constructor(channel: string) {
 		this.channel = channel;
-		this.once = once;
+		this.payload = writable();
+		this.payloads = writable([]);
+		this.subscribed = false;
 	}
 	public subscribe(): [Writable<T>, Writable<T[]>] {
+		if (this.subscribed) return [this.payload, this.payloads];
+		this.subscribed = true;
 		fetch(`/api/subscribe/${this.channel}`).then(async (response) => {
 			this.reader = response.body!.pipeThrough(new TextDecoderStream()).getReader();
 			while (true) {
 				const { value, done } = await this.reader.read();
 				if (done) break;
-				const notificationResponse = JSON.parse(value) as EventNotificationResponse<T>;
-				const data = notificationResponse.payload;
-				this.payload.set(data);
-				this.payloads.update((payloads) => [data, ...payloads]);
-				if (this.once) {
-					this.unsubscribe();
-					break;
-				}
+				const { payload } = JSON.parse(value) as EventNotificationResponse<T>;
+				this.payload.set(payload);
+				this.payloads.update((payloads) => [payload, ...payloads]);
 			}
 		});
 		return [this.payload, this.payloads];
 	}
+	public setPayload(payload: T) {
+		this.payload.set(payload);
+		this.payloads.update((payloads) => [payload, ...payloads]);
+	}
+	public getPayloadData() {
+		return get(this.payload);
+	}
+	public getPayloadsData() {
+		return get(this.payloads);
+	}
 	public async unsubscribe() {
 		try {
-			await this.reader.cancel();
+			if (this.subscribed) await this.reader.cancel();
 		} catch {}
 	}
 }

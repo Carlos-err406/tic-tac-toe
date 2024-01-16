@@ -59,6 +59,4 @@ enum GameState {
   O_WON
   X_WON
   DRAW
-  X
-  O
 }

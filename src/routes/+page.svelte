@@ -1,25 +1,24 @@
 <script lang="ts">
 	import AiMatch from '$lib/components/AIMatch.svelte';
+	import CreatedGames from '$lib/components/CreatedGames.svelte';
 	import LocalMatchForm from '$lib/components/LocalMatchForm.svelte';
 	import OnlineMatchForm from '$lib/components/OnlineMatchForm.svelte';
 	import TypingMachine from '$lib/components/TypingMachine.svelte';
-	import { Subscriber } from '$lib/events';
+	import type { Subscriber } from '$lib/events';
 	import { lg, sm, xxs } from '$lib/stores';
+	import type { Game } from '@prisma/client';
 	import { onMount } from 'svelte';
-	import type { Writable } from 'svelte/store';
 	import { scale } from 'svelte/transition';
 	let mounted = false;
-	// let s: Subscriber<{ name: string }>;
-	// let p: Writable<{ name: string }>;
-	onMount(async () => {
-		// s = new Subscriber<{ name: string }>('roomid--test');
-		// [p] = s.subscribe();
-		mounted = true;
-	});
-	// $: console.log($p);
+	onMount(() => (mounted = true));
+	let games: Subscriber<Game>[] = [];
+
+	const handleCreatedGame = ({ detail }: CustomEvent<Subscriber<Game>>) => {
+		games = [...games, detail];
+	};
 </script>
 
-<div class="w-full h-full flex flex-col justify-center items-center">
+<div class="w-full h-full flex flex-col gap-7 justify-center items-center">
 	{#if mounted}
 		<h1 class="text-3xl font-bold mb-5 text-center">
 			<TypingMachine speed={100} type="text" text="Tic Tac Toe" />
@@ -31,8 +30,11 @@
 			class:grid-cols-1={$xxs}
 		>
 			<div in:scale={{ duration: 300, delay: 0 }}><LocalMatchForm /></div>
-			<div in:scale={{ duration: 300, delay: 400 }}><OnlineMatchForm /></div>
+			<div in:scale={{ duration: 300, delay: 400 }}>
+				<OnlineMatchForm on:created-game={handleCreatedGame} />
+			</div>
 			<div in:scale={{ duration: 300, delay: 800 }}><AiMatch /></div>
 		</div>
 	{/if}
+	<CreatedGames bind:games />
 </div>

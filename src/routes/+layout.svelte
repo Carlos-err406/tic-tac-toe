@@ -3,10 +3,11 @@
 	import { clientWidth } from '$lib/stores';
 	import { ModeWatcher } from 'mode-watcher';
 	import '../app.pcss';
+	import { Toaster } from '$lib/components/ui/sonner';
 </script>
 
 <svelte:window bind:innerWidth={$clientWidth} />
-
+<Toaster />
 <ModeWatcher defaultMode="dark" track={false} />
 <div class="relative flex h-full w-full">
 	<slot />
