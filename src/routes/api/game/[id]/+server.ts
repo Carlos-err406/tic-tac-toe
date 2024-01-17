@@ -1,4 +1,3 @@
-import { PROTOCOL, VERCEL_URL } from '$env/static/private';
 import prisma from '$lib/prisma';
 import { json, type RequestHandler } from '@sveltejs/kit';
 

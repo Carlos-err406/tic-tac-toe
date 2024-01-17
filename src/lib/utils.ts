@@ -162,4 +162,4 @@ export const randString = (length: number) => {
 		result += alphabet.charAt(Math.floor(Math.random() * charactersLength));
 	}
 	return result;
-}
+};

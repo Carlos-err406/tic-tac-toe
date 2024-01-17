@@ -33,8 +33,6 @@
 		</div>
 	{/if}
 	{#if copiedText}
-		<div transition:fly={{ duration: 250, y: -20 }} class="absolute top-5 left-1/2">
-			Copied!
-		</div>
+		<div transition:fly={{ duration: 250, y: -20 }} class="absolute top-5 left-1/2">Copied!</div>
 	{/if}
 </div>

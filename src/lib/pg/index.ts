@@ -2,7 +2,7 @@ import { env } from '$env/dynamic/private';
 import createPostgresSubscriber from 'pg-listen';
 
 const client = createPostgresSubscriber({
-	connectionString: env.POSTGRES_URL
+	connectionString: env.DATABASE_URL
 });
 
 const getSubscriberClient = async () => {

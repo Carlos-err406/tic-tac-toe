@@ -1,11 +1,10 @@
-import { PROTOCOL, VERCEL_URL } from '$env/static/private';
+import { PROTOCOL, DOMAIN } from '$env/static/private';
 import prisma from '$lib/prisma';
 import { randString } from '$lib/utils';
 import { json } from '@sveltejs/kit';
 
-const generateInviteLink = (roomID: string): string =>
-	`${PROTOCOL}${VERCEL_URL}/join-match/${roomID}`;
-const generateGameLink = (roomID: string): string => `${PROTOCOL}${VERCEL_URL}/game/${roomID}`;
+const generateInviteLink = (roomID: string): string => `${PROTOCOL}${DOMAIN}/join-match/${roomID}`;
+const generateGameLink = (roomID: string): string => `${PROTOCOL}${DOMAIN}/game/${roomID}`;
 
 export const POST = async ({ request }) => {
 	const id = randString(6);

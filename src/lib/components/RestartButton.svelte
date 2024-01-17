@@ -1,8 +1,5 @@
 <script lang="ts">
-	import type {
-		FieldStore,
-		ResetterStore
-	} from '$lib/types/storeTypes';
+	import type { FieldStore, ResetterStore } from '$lib/types/storeTypes';
 	import { getContext } from 'svelte';
 
 	const resetter = getContext<ResetterStore>('resetter');
