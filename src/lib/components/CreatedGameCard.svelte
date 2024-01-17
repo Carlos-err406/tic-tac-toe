@@ -10,16 +10,22 @@
 	import { toast } from 'svelte-sonner';
 	export let subscriber: Subscriber<Game>;
 	const [payload] = subscriber.subscribe();
+	
+	$: inviteLink = window?.location.origin + $payload.inviteLink || $payload.inviteLink;
+	$: gameLink = window?.location.origin + $payload.gameLink || $payload.gameLink;
+
 	$: if ($payload.state === GameState.OPPONENT_JOINING)
 		toast(`Your opponnent is joining ${$payload.roomID}`, {
-			description: 'You should join too ;D'
+			description: 'You should join too 😉'
 		});
+
 	$: if ($payload.state === GameState.OPPONENT_JOINED)
 		toast(`Your opponnent has joined ${$payload.roomID}`, {
-			description: 'You should join too ;D'
+			description: 'You should join too 😉'
 		});
+
 	const dispatch = createEventDispatcher();
-	const handleJoin = async () => await goto($payload.gameLink);
+	const handleJoin = async () => await goto(gameLink);
 	const handleDelete = async () => dispatch('game-deleted', $payload);
 </script>
 
@@ -46,27 +52,31 @@
 				<span class="font-extralight text-muted-foreground">Invite Link:</span>
 				<a
 					on:click|preventDefault={() =>
-						copy($payload.inviteLink, () =>
+						copy(inviteLink, () =>
 							toast('Copied invite link to clipboard', {
 								description: 'You can send it to your desired opponent'
 							})
 						)}
 					target="_blank"
-					href={$payload.inviteLink}>{$payload.inviteLink}</a
+					href={inviteLink}
 				>
+					{inviteLink}
+				</a>
 			</div>
 			<div>
 				<span class="font-extralight text-muted-foreground">Game Link:</span>
 				<a
 					on:click|preventDefault={() =>
-						copy($payload.gameLink, () =>
+						copy(gameLink, () =>
 							toast('Copied game link to clipboard', {
-								description: 'To join yourself to the game just hit the join button ;D'
+								description: 'To join yourself to the game just hit the join button 😉'
 							})
 						)}
 					target="_blank"
-					href={$payload.gameLink}>{$payload.gameLink}</a
+					href={gameLink}
 				>
+					{gameLink}
+				</a>
 			</div>
 		</Card.Content>
 		<Card.Footer>
